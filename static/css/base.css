@@ -50,6 +50,15 @@ pre {
   padding: 20px;
 }
 
+kbd, samp {
+  font-family: monospace, monospace;
+  background: rgba(0,0,0,0.1);
+  border-radius: 2px;
+  max-width: 100%;
+  font-size: 80%;
+  padding: 0.1em 0.25em;
+}
+
 hr {
   border: 0;
   height: 2px;
