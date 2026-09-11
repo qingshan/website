@@ -1,4 +1,4 @@
- +++
++++
 title = "集成 Alacritty 和 Tmux 打造超级终端"
 date = 2022-09-26T21:56:09-07:00
 type = "post"
@@ -80,14 +80,16 @@ brew install autossh
 
 ### Alacritty 配置
 
-Alacritty 默认使用的配置文件路径 `~/.config/alacritty/alacritty.yml`。
-我正在使用的配置文件：[alacritty.yml](https://github.com/qingshan/dotfiles/blob/main/alacritty/alacritty.yml)。
+Alacritty 默认使用的配置文件路径 `~/.config/alacritty/alacritty.toml`。从 0.13 版本开始，Alacritty 已经废弃 YAML 配置，全面转向 TOML 格式。
+我正在使用的配置文件：[alacritty.toml](https://github.com/qingshan/dotfiles/blob/main/alacritty/alacritty.toml)。
 运行下面的命令可以把我的配置文件自动下载并使用：
 
 ```bash
-curl -fLo ~/.config/alacritty/alacritty.yml --create-dir \
-    https://raw.githubusercontent.com/qingshan/dotfiles/main/alacritty/alacritty.yml
+curl -fLo ~/.config/alacritty/alacritty.toml --create-dir \
+    https://raw.githubusercontent.com/qingshan/dotfiles/main/alacritty/alacritty.toml
 ```
+
+这里的 `alacritty.toml` 是跨平台的共用配置，平台相关的差异通过 `darwin_alacritty.toml`（macOS）和 `linux_alacritty.toml`（Linux）导入（`import`）该文件来覆盖。
 
 ### Tmux 配置
 
@@ -121,21 +123,23 @@ curl -fLo ~/.tmux.conf \
 
 ## 使用
 
-绑定快捷键使用<kbd>Command</kbd>或者<kbd>Command</kbd> + <kbd>Shift</kbd>作为修饰键。部分快捷键与 iTerm2.app 和 Terminal.app 的绑定对应，部分快捷键与我的 i3 的绑定对应。
+绑定快捷键使用<kbd>Command</kbd>、<kbd>Command</kbd> + <kbd>Shift</kbd> 或者 <kbd>Command</kbd> + <kbd>Alt</kbd> 作为修饰键。部分快捷键与 iTerm2.app 和 Terminal.app 的绑定对应，部分快捷键与我的 i3 的绑定对应。
 
 ### 基本操作
 
 新建
 - <kbd>Command</kbd> + <kbd>D</kbd> 垂直分割窗格
-- <kbd>Command</kbd> + <kbd>Return</kbd> 水平分割窗格
+- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd> 水平分割窗格
 - <kbd>Command</kbd> + <kbd>T</kbd> 新建选项卡
+- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> 新建选项卡，并弹出快捷命令菜单
 
 关闭
 - <kbd>Command</kbd> + <kbd>W</kbd> 关闭窗格
 - <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>W</kbd> 关闭选项卡
-- <kbd>Command</kbd> + <kbd>Q</kbd> 关闭窗口
+- <kbd>Command</kbd> + <kbd>Q</kbd> 关闭窗口（分离当前的 tmux 会话）
 
 访问窗格
+- <kbd>Command</kbd> + <kbd>B</kbd> 切换回上一次访问的窗格
 - <kbd>Command</kbd> + <kbd>H</kbd> 或者 <kbd>Command</kbd> + <kbd>Left</kbd> 访问左边的窗格
 - <kbd>Command</kbd> + <kbd>J</kbd> 或者 <kbd>Command</kbd> + <kbd>Up</kbd> 访问上面的窗格
 - <kbd>Command</kbd> + <kbd>K</kbd> 或者 <kbd>Command</kbd> + <kbd>Down</kbd> 访问下面的窗格
@@ -143,12 +147,8 @@ curl -fLo ~/.tmux.conf \
 
 访问选项卡
 - <kbd>Command</kbd> + <kbd>1</kbd> 到 <kbd>Command</kbd> + <kbd>9</kbd> - 按数字切换选项卡
-- <kbd>Command</kbd> + <kbd>b</kbd> 切换到最近一次访问的选项卡
 - <kbd>Command</kbd> + <kbd>[</kbd> 切换到上一个选项卡
 - <kbd>Command</kbd> + <kbd>]</kbd> 切换到下一个选项卡
-
-访问窗口
-- <kbd>Command</kbd> + <kbd>\`</kbd>：切换窗口。
 
 ### 布局操作
 
@@ -158,30 +158,35 @@ curl -fLo ~/.tmux.conf \
 - <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>K</kbd> 或者 <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>Down</kbd> 向下面的窗推进
 - <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd> 或者 <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>Right</kbd> 向右边的窗格推进
 
+交换窗格
+- <kbd>Command</kbd> + <kbd>Alt</kbd> + <kbd>H</kbd> 或者 <kbd>Command</kbd> + <kbd>Alt</kbd> + <kbd>Left</kbd> 与左边的窗格交换位置
+- <kbd>Command</kbd> + <kbd>Alt</kbd> + <kbd>J</kbd> 或者 <kbd>Command</kbd> + <kbd>Alt</kbd> + <kbd>Up</kbd> 与上面的窗格交换位置
+- <kbd>Command</kbd> + <kbd>Alt</kbd> + <kbd>K</kbd> 或者 <kbd>Command</kbd> + <kbd>Alt</kbd> + <kbd>Down</kbd> 与下面的窗格交换位置
+- <kbd>Command</kbd> + <kbd>Alt</kbd> + <kbd>L</kbd> 或者 <kbd>Command</kbd> + <kbd>Alt</kbd> + <kbd>Right</kbd> 与右边的窗格交换位置
+
 移动窗格到选项卡
 - <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> 到 9: 将窗格移动到指定的选项卡中。
 
 缩放窗格
-- <kbd>Command</kbd> + <kbd>Z</kbd> 缩放当前窗格。
+- <kbd>Command</kbd> + <kbd>Return</kbd> 或者 <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>Return</kbd> 缩放当前窗格。
 
-调整窗格布局
-- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd>：使用预设置的五种布局重新调整窗格。
+### 命令菜单
 
-修改选项卡名称
-- <kbd>Command</kbd> + <kbd>,</kbd>：修改选项卡名称。
-
-### 广播输入
-
-- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>I</kbd>：广播输入到当前选项卡的所有窗格。
-
-### Tmux 命令
-- <kbd>Command</kbd> + <kbd>I</kbd>：输入 tmux 命令。
+- <kbd>Command</kbd> + <kbd>X</kbd> + <kbd>S</kbd>：广播输入到当前选项卡的所有窗格。
+- <kbd>Command</kbd> + <kbd>X</kbd> + <kbd>,</kbd>：修改选项卡名称。
+- <kbd>Command</kbd> + <kbd>X</kbd> + <kbd>:</kbd>：输入 tmux 命令。
+- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd>：关闭当前选项卡中除当前窗格以外的所有窗格。
 
 ### 字体操作
 
 - <kbd>Command</kbd> + <kbd>+</kbd>：调整更大的字体
 - <kbd>Command</kbd> + <kbd>-</kbd>：调整更小的字体
 - <kbd>Command</kbd> + <kbd>0</kbd>：恢复默认大小的字体
+
+### 查找与跳转
+
+- <kbd>Command</kbd> + <kbd>G</kbd>：弹出 grep 窗口搜索文件内容，选择结果后跳转到对应的文件与行。
+- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd>：弹出窗格列表，选择后跳转到对应的窗格。
 
 ### 复制模式
 
@@ -212,10 +217,11 @@ curl -fLo ~/.tmux.conf \
 
 #### 快捷命令
 
-- <kbd>Command</kbd> + <kbd>R</kbd>: 弹出快捷命令菜单，并在当前窗格执行选择的命令。
-- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>：弹出快捷命令菜单，并在新建垂直分割的窗格执行选择的命令。
-- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>Retrun</kbd>：弹出快捷命令菜单，并在新建水平分割的窗格执行选择的命令。
-- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>：弹出快捷命令菜单，并在新建的选项卡执行选择的命令。
+- <kbd>Command</kbd> + <kbd>R</kbd>：弹出项目命令菜单，并在右侧窗格执行选择的命令。
+- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd>：弹出项目命令选择器，并在右侧窗格执行选择的命令。
+- <kbd>Command</kbd> + <kbd>P</kbd>：弹出应用菜单。
+- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>：弹出命令选择器，并在右侧窗格执行选择的命令。
+- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>：弹出命令选择器，并在新建的选项卡执行选择的命令。
 
 快捷命令弹出一个窗口，可以选择需要执行的命令。快捷命令列表由自定义一个可执行的脚本文件 `tmux-commands` 负责提供。脚本文件放到 PATH 路径中。
 可以参考我的脚本文件：[`tmux-commands`](https://raw.githubusercontent.com/qingshan/dotfiles/main/bin/tmux-commands)。
@@ -252,6 +258,7 @@ tmux-commands
 ### 保存文件
 
 - <kbd>Command</kbd> + <kbd>S</kbd>：输出 Vim 保存文件的指令 `<ESC>:w<CR>`，注意要在 Vim 下使用。
+- <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>：输出 Vim 保存全部文件的指令 `<ESC>:wa<CR>`，注意要在 Vim 下使用。
 
 时不时的保存文件是个好习惯。
 
@@ -265,74 +272,77 @@ tmux-commands
 ### 配置终端类型
 
 给 alacritty 追加环境变量：
-```yaml
-env:
-  TERM: xterm-256color
+```toml
+[env]
+TERM = "xterm-256color"
 ```
 
 ### 配置字体
 
 指定使用 JetBrains Mono 字体，字体大小设置为 14 点数。
 
-```yaml
-font:
-  normal:
-    family: JetBrainsMono Nerd Font
-    style: Regular
-
-  bold:
-    family: JetBrainsMono Nerd Font
-    style: Bold
-
-  italic:
-    family: JetBrainsMono Nerd Font
-    style: Italic
-
-  bold_italic:
-    family: JetBrainsMono Nerd Font
-    style: Bold Italic
-
-  size: 14
+```toml
+[font]
+size = 14
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
 ```
 
 ### 配置窗口
 
-Alacritty 启动的时候使用全屏模式，但是又不独占一个桌面。窗口不需要任何裱装。
+Alacritty 启动的时候使用全屏模式。窗口不需要任何裱装。
 
-```yaml
-window:
-  startup_mode: SimpleFullscreen
-  decorations: none
+```toml
+[window]
+decorations = "None"
+option_as_alt = "Both"
+startup_mode = "Fullscreen"
+```
+
+macOS 下会进一步覆盖为不独占桌面的 `SimpleFullscreen`，并开启 `dynamic_padding`：
+
+```toml
+[window]
+startup_mode = "SimpleFullscreen"
+dynamic_padding = true
 ```
 
 ### 配置 Shell
 
-使用 Fish 作为默认的 Shell。启动的时候总是直接创建或使用名为 `main` 的 tmux 会话。
+登录 Shell 使用系统自带的 zsh（macOS）或 bash（Linux），启动的时候总是直接创建或使用名为 `main` 的 tmux 会话。交互式 Shell 依然是 Fish，通过 tmux 的 `default-shell` 设置。
 
-```yaml
-shell:
-  program: /usr/local/bin/fish
-  args:
-    - --login
-    - --command
-    - "tmux new-session -A -D -s main"
+```toml
+[terminal.shell]
+program = "/bin/zsh" # Linux 下为 /bin/bash
+args = ["--login", "-c", "tmux new-session -A -D -s main"]
 ```
 
 ### 配置快捷键映射
 
 可以映射到 tmux 的绑定：
-```yaml
-  - { key: T,        mods: Command,       chars: "\x1cc"    } # new tab with default shell
+```toml
+[keyboard]
+bindings = [
+  { key = "T", mods = "Command", chars = "\u001cc" }, # new tab with default shell
+]
 ```
 
 甚至 Vim 指令：
-```yaml
-  - { key: S,        mods: Command,       chars: "\x1b:w\x0a"} # Type <escape>:w<enter> to save vim
+```toml
+[keyboard]
+bindings = [
+  { key = "S", mods = "Command", chars = "\u001b:w\u000a" }, # type <escape>:w<enter> to save in vim
+]
 ```
 
 还可以可以映射运行程序：
-```yaml
-  - { key: N,        mods: Command|Shift, command: { program: "/usr/local/bin/alacritty", args: ["msg", "create-window", "-e", "/usr/local/bin/fish", "--login", "--command", "tmux-sessions --all"] } } # open session in new window with all sessions menu across servers
+```toml
+[keyboard]
+bindings = [
+  { key = "N", mods = "Command|Shift", command = { program = "/opt/homebrew/bin/alacritty", args = ["msg", "create-window", "-e", "/bin/zsh", "--login", "-c", "tmux-sessions all"] } }, # open session in new window with all sessions menu across servers
+]
 ```
 
 ## 奖励
@@ -347,16 +357,17 @@ Alacritty 默认的图标在 Dock 上与其他应用程序的图标有点格格�
 
 macOS 下输入法退格键会删除已输入内容的问题：[issues:1606](https://github.com/alacritty/alacritty/issues/1606)
 
-官方给出的临时解决方案为：
+官方给出的临时解决方案为（把下面这段追加到配置中）：
 
-```yaml
-key_bindings:
-  - { key: Back,                          action:  ReceiveChar     }
+```toml
+[[keyboard.bindings]]
+key = "Back"
+action = "ReceiveChar"
 ```
 
 ### Alt 组合键映射
 
-所有以 <kbd>Alt</kbd> 和 <kbd>Alt</kbd> + <kbd>Shift</kbd> 为修饰键的按键都映射为 Esc 前缀键码。
+在 macOS 下通过 `option_as_alt = "Both"` 把 Option 键作为 Alt（Meta）键使用，所有以 <kbd>Alt</kbd> 和 <kbd>Alt</kbd> + <kbd>Shift</kbd> 为修饰键的按键都映射为 Esc 前缀键码。
 
 ### IDE 布局
 
